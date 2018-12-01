@@ -5,53 +5,14 @@ import {
     View
 } from 'react-native';
 import { MapView } from 'expo';
-import styles from "./HomeScreen.style"
-import gql from "graphql-tag";
 import {Query, Mutation} from "react-apollo";
-import axios from "axios";
-
-import JobList from "../components/JobList"
-import {Button, Container} from "native-base";
-
-const MAP_API_KEY = "AIzaSyDFz1mFqY6E2oiw5X661_Xnah9Wmofh1Ag";
-
-const mode = 'driving';
-const origin = 'istanbul';
-const destination = 'ankara';
-const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${destination}&key=${MAP_API_KEY}&mode=${mode}`;
 
 
-const query = gql`
-  query Job( $jobId: Int! ) {
-    jobs(where: {id: {_eq: $jobId}}) {
-    id,
-    source,
-    destination,
-    description,
-    companies {
-      name,
-      id
-    }
-    }
-  }
-`;
+import {Button} from "native-base";
 
+import {QUERY, MUTATION} from "../services/job.graphql"
+import {getRoute} from "../services/gmap.api"
 
-const mutation = gql`
-mutation applyJob($driver: Int!, $job: Int!, $status: String!) {
-    insert_job_drivers(objects:[
-    {driver_id: $driver, job_id: $job, status: $status}
-  ]) {
-    returning {
-      drivers {
-        name
-      }, jobs {
-        id
-      }
-    }
-  }
-}
-`;
 
 const Marker = MapView.Marker;
 const Polyline = MapView.Polyline;
@@ -60,15 +21,9 @@ export default class JobDetailScreen extends React.Component {
         routes: []
     };
 
-    handleApprove = () => {
-
-    };
-
     async componentDidMount() {
         try {
-            const {data} = await axios(url);
-            console.log(data);
-            const routes = this.decode(data.routes[0].overview_polyline.points);
+            const routes = await getRoute("istanbul", "ankara");
             this.setState({routes});
         } catch (e) {
             console.error(e)
@@ -76,14 +31,12 @@ export default class JobDetailScreen extends React.Component {
 
     }
 
-    decode = (t,e) => {for(var n,o,u=0,l=0,r=0,d= [],h=0,i=0,a=null,c=Math.pow(10,e||5);u<t.length;){a=null,h=0,i=0;do a=t.charCodeAt(u++)-63,i|=(31&a)<<h,h+=5;while(a>=32);n=1&i?~(i>>1):i>>1,h=i=0;do a=t.charCodeAt(u++)-63,i|=(31&a)<<h,h+=5;while(a>=32);o=1&i?~(i>>1):i>>1,l+=n,r+=o,d.push([l/c,r/c])}return d=d.map(function(t){return{latitude:t[0],longitude:t[1]}})}
-
 
     render() {
         const { params } = this.props.navigation.state;
         console.log(params);
         return (
-                <Query query={query} variables={{jobId: params.jobId}}>
+                <Query query={QUERY.FIND_JOB_BY_ID} variables={{jobId: params.jobId}}>
                     {
                         ({loading, error, data}) => {
                             if (loading) {
@@ -112,18 +65,23 @@ export default class JobDetailScreen extends React.Component {
                                         coordinates={this.state.routes}
                                         strokeWidth={4}
                                     />
+
                                 </MapView>
 
                                 <Text>{"Job Detail " + job.description}</Text>
 
-                                <Mutation mutation={mutation}>
+                                <Mutation mutation={MUTATION.APPLY_FOR_JOB}>
                                     {
                                         (insert_job_drivers, {data}) => {
                                             console.log(data);
-                                            return <Button full onPress={() => {
-                                                insert_job_drivers({variables: {job: params.jobId, driver: 4, status: "PENDING"}})
-                                            }}>
-                                                <Text>APPLY</Text>
+                                            return <Button
+                                                full
+                                                disabled={data != null}
+                                                onPress={() => {
+                                                    insert_job_drivers({variables: {job: params.jobId, driver: 4, status: "PENDING"}})
+                                                }}
+                                            >
+                                                <Text>{data ? "PENDING" : "APPLY"}</Text>
                                             </Button>
                                         }
                                     }
