@@ -13,7 +13,7 @@ import JobListItem from "./JobListItem"
 
 class JobList extends Component {
     renderList = () => {
-        const {jobs} = this.props;
+        const {jobs, onItemPress} = this.props;
         return jobs.map(({id, companies, description, source, destination}, key) =>
             <View key={key}>
                 <JobListItem
@@ -22,7 +22,8 @@ class JobList extends Component {
                     companyName={companies.name}
                     description={description}
                     source={source}
-                    destionation={destination}
+                    destination={destination}
+                    onPress={onItemPress}
                 />
             </View>
         )

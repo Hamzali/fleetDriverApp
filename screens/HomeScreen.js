@@ -6,6 +6,7 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
+    Alert,
     View
 } from 'react-native';
 
@@ -34,7 +35,9 @@ export default class HomeScreen extends React.Component {
     static navigationOptions = {
         header: null
     };
-
+    handleItemPress = (jobId) => {
+        this.props.navigation.navigate("JobDetail", {jobId});
+    };
     render() {
         return (
             <Query query={query}>
@@ -42,7 +45,7 @@ export default class HomeScreen extends React.Component {
                     ({loading, error, data}) => {
                         return <View style={styles.container}>
                             <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-                                {!loading && <JobList jobs={data.jobs}/>}
+                                {!loading && <JobList jobs={data.jobs} onItemPress={this.handleItemPress}/>}
                                 {loading && <Text>"Loading Jobs"</Text>}
                             </ScrollView>
                         </View>
