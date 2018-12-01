@@ -2,13 +2,27 @@ import React from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
+import ApolloClient from "apollo-boost";
+
+
+
+const client = new ApolloClient({
+  uri: "https://gpgsql.herokuapp.com/v1alpha1/graphql"
+});
+import { ApolloProvider } from "react-apollo";
 
 export default class App extends React.Component {
   state = {
     isLoadingComplete: false,
   };
+  async componentWillMount() {
+    await Expo.Font.loadAsync({
+      'Roboto': require('native-base/Fonts/Roboto.ttf'),
+      'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+    });
+  }
 
-  render() {
+  renderApp = () => {
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
       return (
         <AppLoading
@@ -25,6 +39,11 @@ export default class App extends React.Component {
         </View>
       );
     }
+  }
+  render() {
+    return <ApolloProvider client={client}>
+      {this.renderApp()}
+    </ApolloProvider>
   }
 
   _loadResourcesAsync = async () => {
