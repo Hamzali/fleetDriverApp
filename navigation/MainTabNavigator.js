@@ -4,8 +4,8 @@ import { createStackNavigator, createBottomTabNavigator } from 'react-navigation
 
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import CurrentJobScreen from "../screens/CurrentJobScreen";
+import PendingJobsScreen from "../screens/PendingJobsScreen";
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
@@ -25,12 +25,12 @@ HomeStack.navigationOptions = {
   ),
 };
 
-const LinksStack = createStackNavigator({
-  Links: LinksScreen,
+const JobStack = createStackNavigator({
+  Job: CurrentJobScreen,
 });
 
-LinksStack.navigationOptions = {
-  tabBarLabel: 'Links',
+JobStack.navigationOptions = {
+  tabBarLabel: 'Job',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -39,12 +39,12 @@ LinksStack.navigationOptions = {
   ),
 };
 
-const SettingsStack = createStackNavigator({
-  Settings: SettingsScreen,
+const PendingStack = createStackNavigator({
+  Pending: PendingJobsScreen,
 });
 
-SettingsStack.navigationOptions = {
-  tabBarLabel: 'Settings',
+PendingStack.navigationOptions = {
+  tabBarLabel: 'Pending',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -55,6 +55,6 @@ SettingsStack.navigationOptions = {
 
 export default createBottomTabNavigator({
   HomeStack,
-  LinksStack,
-  SettingsStack,
+  LinksStack: JobStack,
+  SettingsStack: PendingStack,
 });
