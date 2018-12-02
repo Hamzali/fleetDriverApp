@@ -68,7 +68,11 @@ export const SUBSCRIPTION = {
                     name,
                     description,
                     source,
-                    destination
+                    destination,
+                    companies {
+                      name,
+                      id
+                    }               
                 },
                 status
             }
@@ -112,7 +116,19 @@ mutation applyJob($driver: Int!, $job: Int!, $status: String!) {
     }
   }
 }
-`
+`,
+    START_JOB: gql`
+        mutation statJob($driver: Int!, $job: Int!) {
+            update_job_drivers(
+                where:{job_id:{_eq: $job} driver_id:{_eq: $driver}}
+                _set:{status:"IN_PROGRESS"}
+              ) {
+                returning {
+                  job_id
+                }
+              }
+        }
+    `
 };
 
 

@@ -65,7 +65,7 @@ export default class App extends React.Component {
                 </View>
             );
         }
-    }
+    };
 
     render() {
         return <ApolloProvider client={client}>

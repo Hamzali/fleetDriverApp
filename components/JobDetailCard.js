@@ -6,7 +6,7 @@ import {Container, Card, Content, CardItem, Text, Body} from "native-base"
 class JobDetailCard extends Component {
     render() {
         const {job, status} = this.props;
-        return  <Container>
+        return  <Container style={{height: 300}}>
             <Content padder>
                 <Card>
                     <CardItem header bordered>
