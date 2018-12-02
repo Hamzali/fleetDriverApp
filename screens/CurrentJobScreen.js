@@ -1,11 +1,10 @@
 import React, {Component} from "react"
 import {Alert, View} from 'react-native';
-import styles from "./HomeScreen.style";
 import {MapView} from "expo";
 import {getRoute} from "../services/gmap.api";
 import {Subscription} from "react-apollo";
 import {SUBSCRIPTION} from "../services/job.graphql";
-import {Button, Spinner, Text} from "native-base";
+import {Button, Spinner, Text, H1} from "native-base";
 import JobDetailCard from "../components/JobDetailCard";
 
 const Marker = MapView.Marker;
@@ -43,7 +42,11 @@ class CurrentJobScreen extends Component {
                             }
 
                             if (data.job_drivers.length <= 0) {
-                                return <Text>No Active Job</Text>
+                                return <View
+                                    style={{flex: 1, alignItems: "center", justifyContent: "center"}}
+                                >
+                                    <H1>No Active Job</H1>
+                                </View>
                             }
 
 
