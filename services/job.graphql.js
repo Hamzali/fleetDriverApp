@@ -5,8 +5,7 @@ export const QUERY = {
   query {
   jobs(where: {done: {_eq: false}}) {
     id,
-    source,
-    destination,
+    name,
     description,
     companies {
       name,
@@ -28,20 +27,6 @@ export const QUERY = {
     }
   }
 }
-`,
-    FIND_JOB_BY_ID: gql`
-  query Job( $jobId: Int! ) {
-    jobs(where: {id: {_eq: $jobId}}) {
-    id,
-    source,
-    destination,
-    description,
-    companies {
-      name,
-      id
-    }
-    }
-  }
 `,
     FIND_ALL_BY_DRIVER_ID_AND_STATUS: gql`
         query jobByDriverId($driver: Int! $status: String!) {
@@ -88,7 +73,28 @@ export const SUBSCRIPTION = {
                 status
             }
         }
-    `
+    `,
+    FIND_JOB_BY_ID: gql`
+subscription Job( $jobId: Int! $driver: Int!) {
+    jobs(where: {id: {_eq: $jobId}}) {
+        id,
+        name,
+        source,
+        destination,
+        description,
+        companies {
+          name,
+          id
+        }
+        job_drives(where: {driver_id: {_eq: $driver}}) {
+            status,
+            drivers {
+                id
+            }
+        }
+    }
+}
+`,
 };
 
 export const MUTATION = {

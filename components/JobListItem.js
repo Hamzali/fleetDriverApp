@@ -7,7 +7,7 @@ class JobListItem extends React.Component {
       onPress(jobId);
     };
     render() {
-        const {jobId, companyName, companyId, source, destination, description} = this.props;
+        const {jobId, companyName, companyId, description, jobName} = this.props;
         return <ListItem thumbnail>
             <Left>
                 <Thumbnail
@@ -16,10 +16,9 @@ class JobListItem extends React.Component {
                 />
             </Left>
             <Body>
-            <Text>{companyName}</Text>
-            <Text note >{description || "No description"}</Text>
-            <Text note >{source || "No description"}</Text>
-            <Text note numberOfLines={1}>{destination || "No description"}</Text>
+                <Text>{jobName}</Text>
+                <Text note>{companyName}</Text>
+                <Text note numberOfLines={1}>{description || "No description"}</Text>
             </Body>
             <Right>
                 <Button transparent onPress={this.handlePress}>

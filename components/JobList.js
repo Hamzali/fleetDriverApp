@@ -13,15 +13,14 @@ import JobListItem from "./JobListItem"
 class JobList extends Component {
     renderList = () => {
         const {jobs, onItemPress} = this.props;
-        return jobs.map(({id, companies, description, source, destination}, key) =>
+        return jobs.map(({id, companies, description, name}, key) =>
             <View key={key}>
                 <JobListItem
                     jobId={id}
                     companyId={companies.id}
                     companyName={companies.name}
                     description={description}
-                    source={source}
-                    destination={destination}
+                    jobName={name}
                     onPress={onItemPress}
                 />
             </View>
