@@ -52,6 +52,7 @@ export default class JobDetailScreen extends React.Component {
                                         latitudeDelta: 0.0922,
                                         longitudeDelta: 0.0421,
                                     }}
+                                    zoom={10}
 
                                 >
                                     <Marker coordinate={{
@@ -68,20 +69,26 @@ export default class JobDetailScreen extends React.Component {
 
                                 </MapView>
 
-                                <Text>{"Job Detail " + job.description}</Text>
+                                <Text>{job.description != null ? job.description : "No description"}</Text>
+                                <Text>{job.source} -> {job.destination}</Text>
+                                <Text>{job.time}</Text>
+                                <Text>{job.capacity}</Text>
+                                <Text>{job.model}</Text>
+
 
                                 <Mutation mutation={MUTATION.APPLY_FOR_JOB}>
                                     {
                                         (insert_job_drivers, {data}) => {
-                                            console.log(data);
                                             return <Button
                                                 full
                                                 disabled={data != null}
                                                 onPress={() => {
                                                     insert_job_drivers({variables: {job: params.jobId, driver: 4, status: "PENDING"}})
+                                                        .then(console.log)
+                                                        .catch(console.error)
                                                 }}
                                             >
-                                                <Text>{data ? "PENDING" : "APPLY"}</Text>
+                                                <Text style={{color: "white"}}>{data ? "PENDING" : "APPLY"}</Text>
                                             </Button>
                                         }
                                     }

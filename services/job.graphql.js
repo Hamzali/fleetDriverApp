@@ -1,6 +1,20 @@
 import gql from "graphql-tag";
 
 export const QUERY = {
+    FIND_AVAILABLE_JOBS: gql`
+  query {
+  jobs(where: {done: {_eq: false}}) {
+    id,
+    source,
+    destination,
+    description,
+    companies {
+      name,
+      id
+    }
+  }
+}
+`,
     FIND_ALL: gql`
   query {
   jobs {
@@ -46,11 +60,27 @@ export const QUERY = {
 
 
 export const SUBSCRIPTION = {
+    FIND_AVAILABLE_JOBS: gql`
+  subscription {
+  jobs(where: {done: {_eq: false} }) {
+    id,
+    source,
+    name,
+    destination,
+    description,
+    companies {
+      name,
+      id
+    }
+  }
+}
+`,
     ALL_BY_DRIVER_ID_AND_STATUS: gql`
-        subscription jobByDriverId($driver: Int! $status: String!) {
-            job_drivers(where: {driver_id:{_eq: $driver} status:{_eq: $status}}) {
+        subscription jobByDriverId($driver: Int! $status: [String]!) {
+            job_drivers(where: {driver_id:{_eq: $driver} status:{_in: $status}}) {
                 jobs {
                     id,
+                    name,
                     description,
                     source,
                     destination
@@ -77,4 +107,11 @@ mutation applyJob($driver: Int!, $job: Int!, $status: String!) {
   }
 }
 `
+};
+
+
+export default {
+  QUERY,
+  MUTATION,
+  SUBSCRIPTION
 };
